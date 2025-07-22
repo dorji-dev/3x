@@ -9,6 +9,7 @@ import * as React from 'react'
 import appCss from '~/styles/app.css?url'
 import { ConvexAuthProvider } from '@convex-dev/auth/react'
 import { ConvexReactClient } from 'convex/react'
+import { Navbar } from '~/components/ui/navbar'
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string)
 
@@ -58,7 +59,10 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   return (
     <RootDocument>
-      <Outlet />
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <Outlet />
+      </div>
     </RootDocument>
   )
 }

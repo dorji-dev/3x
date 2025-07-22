@@ -1,5 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '~/components/ui/button'
+import { ProtectedRoute } from '~/components/ui/protected-route'
+import { useAuth } from '~/lib/auth'
+import { useQuery } from 'convex/react'
+import { api } from 'convex/_generated/api'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -7,17 +11,31 @@ export const Route = createFileRoute('/')({
 
 function Home() {
   return (
-    <main className="p-8 flex flex-col gap-16">
-      <h1 className="text-4xl font-bold text-center">
-        Convex + Tanstack Start
-      </h1>
-      <Button>hello</Button>
+    <ProtectedRoute>
+      <HomePage />
+    </ProtectedRoute>
+  )
+}
+
+function HomePage() {
+  const currentUser = useQuery(api.users.getCurrentUser)
+
+  return (
+    <main className="container mx-auto p-8 flex flex-col gap-16">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">
+          Welcome to Convex + TanStack Start
+        </h1>
+        {currentUser && (
+          <p className="text-lg text-gray-600 mb-8">
+            Hello, {currentUser.name || currentUser.email}! 🎉
+          </p>
+        )}
+      </div>
+
       <div className="flex flex-col text gap-8 max-w-lg mx-auto">
-        <p>Welcome!</p>
-        <p>
-          Click the button below and open this page in another window - this
-          data is persisted in the Convex cloud database!
-        </p>
+        <p>Welcome to your authenticated app!</p>
+        <p>You are now signed in and can access protected content.</p>
         <p>
           <button
             className="bg-dark dark:bg-light text-light dark:text-dark text-sm px-4 py-2 rounded-md border-2"
@@ -47,16 +65,6 @@ function Home() {
             app/routes/index.tsx
           </code>{' '}
           to change your frontend
-        </p>
-        <p>
-          Open{' '}
-          <a
-            href="/anotherPage"
-            className="text-blue-600 underline hover:no-underline"
-          >
-            another page
-          </a>{' '}
-          to send an action.
         </p>
         <div className="flex flex-col">
           <p className="text-lg font-bold">Useful resources:</p>
