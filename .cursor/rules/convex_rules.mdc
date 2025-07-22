@@ -462,7 +462,7 @@ Internal Functions:
     "jsx": "react-jsx"
   },
   "exclude": ["convex"],
-  "include": ["**/src/**/*.tsx", "**/src/**/*.ts", "vite.config.ts"]
+  "include": ["**/app/**/*.tsx", "**/app/**/*.ts", "vite.config.ts"]
 }
 ```
 
@@ -667,7 +667,7 @@ export default defineSchema({
 });
 ```
 
-#### src/App.tsx
+#### app/App.tsx
 ```typescript
 export default function App() {
   return <div>Hello World</div>;
