@@ -1,5 +1,5 @@
 import { Button } from './button'
-import { useAuth } from '~/lib/auth'
+import { useAuth } from 'src/lib/auth'
 
 export function GoogleSignInButton() {
   const { signInWithGoogle, isLoading } = useAuth()

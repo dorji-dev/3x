@@ -1,5 +1,4 @@
-import { useAuth } from '~/lib/auth'
-import { redirect } from '@tanstack/react-router'
+import { useAuth } from 'src/lib/auth'
 import { useEffect } from 'react'
 
 interface ProtectedRouteProps {
@@ -18,8 +17,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className="flex-1 overflow-y-hidden">
+        <div className="text-center h-full flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
           <p className="mt-2 text-gray-600">Loading...</p>
         </div>

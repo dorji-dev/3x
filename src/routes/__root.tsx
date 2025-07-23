@@ -7,11 +7,7 @@ import {
 import { QueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import appCss from '~/styles/app.css?url'
-import { ConvexAuthProvider } from '@convex-dev/auth/react'
-import { ConvexReactClient } from 'convex/react'
-import { Navbar } from '~/components/ui/navbar'
-
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string)
+import { Navbar } from 'src/components/ui/navbar'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -59,7 +55,7 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   return (
     <RootDocument>
-      <div className="min-h-screen bg-gray-50">
+      <div className="h-[100dvh] flex flex-col">
         <Navbar />
         <Outlet />
       </div>
@@ -74,7 +70,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ConvexAuthProvider client={convex}>{children}</ConvexAuthProvider>
+        {children}
         <Scripts />
       </body>
     </html>

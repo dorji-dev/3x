@@ -1,52 +1,57 @@
-import { Link } from '@tanstack/react-router'
 import { Button } from './button'
-import { useAuth } from '~/lib/auth'
+import { useAuth } from 'src/lib/auth'
 import { useQuery } from 'convex/react'
 import { api } from 'convex/_generated/api'
+import ThemeSwitcher from '../theme-switcher'
 
 export function Navbar() {
   const { isAuthenticated, signOut } = useAuth()
   const currentUser = useQuery(api.users.getCurrentUser)
 
   return (
-    <nav className="border-b bg-white">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex justify-between items-center">
-          <Link
-            to="/"
-            className="text-xl font-bold text-gray-900 hover:text-gray-700"
-          >
-            My App
-          </Link>
+    <nav className="flex items-center p-4 max-w-7xl mx-auto justify-between gap-2 sm:gap-4">
+      {isAuthenticated && currentUser ? (
+        <>
+          <div className="hidden sm:flex items-center gap-3">
+            {currentUser.image && (
+              <img
+                src={currentUser.image}
+                alt={currentUser.name || 'User'}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <span className="text-sm text-gray-600 truncate max-w-[150px]">
+              {currentUser.name || currentUser.email}
+            </span>
+          </div>
 
-          <div className="flex items-center gap-4">
-            {isAuthenticated && currentUser ? (
-              <>
-                <div className="flex items-center gap-3">
-                  {currentUser.image && (
-                    <img
-                      src={currentUser.image}
-                      alt={currentUser.name || 'User'}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  )}
-                  <span className="text-sm text-gray-600">
-                    {currentUser.name || currentUser.email}
-                  </span>
-                </div>
-                <Button variant="outline" onClick={signOut} size="sm">
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-              <Link to="/login">
-                <Button variant="default" size="sm">
-                  Sign In
-                </Button>
-              </Link>
+          <div className="sm:hidden">
+            {currentUser.image && (
+              <img
+                src={currentUser.image}
+                alt={currentUser.name || 'User'}
+                className="w-8 h-8 rounded-full"
+              />
             )}
           </div>
-        </div>
+        </>
+      ) : (
+        <div></div>
+      )}
+
+      <div>
+        {isAuthenticated && currentUser && (
+          <Button
+            variant="outline"
+            onClick={signOut}
+            size="sm"
+            className="text-xs sm:text-sm px-2 sm:px-3"
+          >
+            <span className="hidden sm:inline">Sign Out</span>
+            <span className="sm:hidden">Out</span>
+          </Button>
+        )}
+        <ThemeSwitcher />
       </div>
     </nav>
   )
