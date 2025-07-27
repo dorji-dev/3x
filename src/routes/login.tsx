@@ -1,11 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { GoogleSignInButton } from 'src/components/ui/google-sign-in'
+import { useConvexAuth } from 'convex/react'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
+  const { isAuthenticated, isLoading } = useConvexAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.navigate({ to: '/' })
+    }
+  }, [isAuthenticated])
+
+  if (isLoading && !isAuthenticated) return <div>Loading...</div>
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8">
