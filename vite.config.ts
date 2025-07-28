@@ -15,6 +15,7 @@ export default defineConfig({
     }),
     tanstackStart({
       customViteReactPlugin: true, // Enable custom React plugin configuration
+      target: 'vercel',
     }),
     react(), // Add the React plugin
   ],
