@@ -10,9 +10,9 @@ import {
 } from 'src/components/ui/popover'
 import { TodoItemWithSubtasks } from './todo-item-with-subtasks'
 import { DurationSelect } from './duration-select'
-import { useMutation } from 'convex/react'
 import { api } from 'convex/_generated/api'
 import type { Id } from 'convex/_generated/dataModel'
+import { useMutation } from '~/lib/convex-helper'
 
 interface TodoWithSubtasks {
   _id: Id<'todos'>
@@ -104,7 +104,7 @@ export function TodoColumn({
     if (!newTodoText.trim() || !groupId) return
 
     try {
-      await createTodo({
+      await createTodo.mutateAsync({
         text: newTodoText.trim(),
         groupId,
         durationMinutes: newTodoDuration,
@@ -141,116 +141,120 @@ export function TodoColumn({
   const styles = getColumnStyles()
 
   return (
-    <div className="flex-1 min-h-[400px] sm:min-h-[500px]">
-      <div className={`border rounded-xl shadow-sm ${styles.container}`}>
-        {/* Column Header with Icon */}
-        <div className={`p-3 sm:p-4 border-b ${styles.header}`}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
+    <div
+      className={`border rounded-xl shadow-sm h-full overflow-y-auto ${styles.container}`}
+    >
+      {/* Column Header with Icon */}
+      <div className={`p-3 sm:p-4 border-b ${styles.header}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            {isCompleted ? (
+              <CheckCircle className={`h-6 w-6 ${styles.icon}`} />
+            ) : (
+              <Circle className={`h-6 w-6 ${styles.icon}`} />
+            )}
+            <Badge className={styles.badge}>
+              {organizedTodos.length}{' '}
+              {organizedTodos.length === 1 ? 'task' : 'tasks'}
+            </Badge>
+          </div>
+
+          {!isCompleted && groupId && (
+            <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-dashed w-full sm:w-auto hover:bg-white/50 dark:hover:bg-gray-900/50"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Task
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                align="end"
+                className="w-[calc(100vw-2rem)] max-w-sm mx-4 sm:w-80 sm:mx-0"
+              >
+                <div className="space-y-4">
+                  <h4 className="font-medium">Add new task</h4>
+                  <Input
+                    placeholder="What needs to be done?"
+                    value={newTodoText}
+                    onChange={(e) => setNewTodoText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && e.ctrlKey) {
+                        handleCreateTodo()
+                      } else if (e.key === 'Escape') {
+                        setIsCreateOpen(false)
+                        setNewTodoText('')
+                        setNewTodoDuration(undefined)
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <DurationSelect
+                    value={newTodoDuration}
+                    onValueChange={setNewTodoDuration}
+                    placeholder="Set duration (optional)"
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setIsCreateOpen(false)
+                        setNewTodoText('')
+                        setNewTodoDuration(undefined)
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      disabled={
+                        !newTodoText.trim() || createTodo.status === 'pending'
+                      }
+                      onClick={handleCreateTodo}
+                      size="sm"
+                    >
+                      Add Task
+                    </Button>
+                  </div>
+                  <p className="text-xs text-right text-muted-foreground">
+                    Press Ctrl+Enter to quickly add
+                  </p>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+        </div>
+      </div>
+
+      {/* Column Content */}
+      <div className="p-3 sm:p-4">
+        {organizedTodos.length === 0 ? (
+          <div className="text-center py-8 sm:py-12">
+            <div
+              className={`w-12 h-12 mx-auto mb-3 rounded-full bg-white/50 dark:bg-gray-800/50 flex items-center justify-center`}
+            >
               {isCompleted ? (
                 <CheckCircle className={`h-6 w-6 ${styles.icon}`} />
               ) : (
                 <Circle className={`h-6 w-6 ${styles.icon}`} />
               )}
-              <Badge className={styles.badge}>
-                {organizedTodos.length}{' '}
-                {organizedTodos.length === 1 ? 'task' : 'tasks'}
-              </Badge>
             </div>
-
-            {!isCompleted && groupId && (
-              <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-dashed w-full sm:w-auto hover:bg-white/50 dark:hover:bg-gray-900/50"
-                  >
-                    <Plus className="h-4 w-4 mr-1" />
-                    Add Task
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  align="end"
-                  className="w-[calc(100vw-2rem)] max-w-sm mx-4 sm:w-80 sm:mx-0"
-                >
-                  <div className="space-y-4">
-                    <h4 className="font-medium">Add new task</h4>
-                    <Input
-                      placeholder="What needs to be done?"
-                      value={newTodoText}
-                      onChange={(e) => setNewTodoText(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && e.ctrlKey) {
-                          handleCreateTodo()
-                        } else if (e.key === 'Escape') {
-                          setIsCreateOpen(false)
-                          setNewTodoText('')
-                          setNewTodoDuration(undefined)
-                        }
-                      }}
-                      autoFocus
-                    />
-                    <DurationSelect
-                      value={newTodoDuration}
-                      onValueChange={setNewTodoDuration}
-                      placeholder="Set duration (optional)"
-                    />
-                    <div className="flex gap-2">
-                      <Button onClick={handleCreateTodo} size="sm">
-                        Add Task
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setIsCreateOpen(false)
-                          setNewTodoText('')
-                          setNewTodoDuration(undefined)
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Press Ctrl+Enter to quickly add
-                    </p>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            )}
+            <div className="text-muted-foreground text-sm">{emptyMessage}</div>
           </div>
-        </div>
-
-        {/* Column Content */}
-        <div className="p-3 sm:p-4">
-          {organizedTodos.length === 0 ? (
-            <div className="text-center py-8 sm:py-12">
-              <div
-                className={`w-12 h-12 mx-auto mb-3 rounded-full bg-white/50 dark:bg-gray-800/50 flex items-center justify-center`}
-              >
-                {isCompleted ? (
-                  <CheckCircle className={`h-6 w-6 ${styles.icon}`} />
-                ) : (
-                  <Circle className={`h-6 w-6 ${styles.icon}`} />
-                )}
-              </div>
-              <div className="text-muted-foreground text-sm">
-                {emptyMessage}
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {organizedTodos.map((todo) => (
-                <TodoItemWithSubtasks
-                  key={todo._id}
-                  todo={todo}
-                  groupId={groupId!}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        ) : (
+          <div className="space-y-3">
+            {organizedTodos.map((todo) => (
+              <TodoItemWithSubtasks
+                key={todo._id}
+                todo={todo}
+                groupId={groupId!}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

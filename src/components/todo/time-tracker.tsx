@@ -1,16 +1,9 @@
 import { useState, useEffect } from 'react'
-import {
-  Play,
-  Pause,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  TrendingUp,
-} from 'lucide-react'
+import { Play, Pause, Clock, CheckCircle2, AlertCircle } from 'lucide-react'
 import { Button } from 'src/components/ui/button'
-import { useMutation } from 'convex/react'
 import { api } from 'convex/_generated/api'
 import type { Id } from 'convex/_generated/dataModel'
+import { useMutation } from '~/lib/convex-helper'
 
 interface TimeTrackerProps {
   todoId: Id<'todos'>
@@ -29,7 +22,6 @@ export function TimeTracker({
   startTime,
   accumulatedTime,
   completedTime,
-  createdAt,
   completed,
   isSubtask = false,
 }: TimeTrackerProps) {
@@ -50,7 +42,7 @@ export function TimeTracker({
 
   const handleStartTimer = async () => {
     try {
-      await startTimer({ id: todoId })
+      await startTimer.mutateAsync({ id: todoId })
     } catch (error) {
       console.error('Failed to start timer:', error)
     }
@@ -58,7 +50,7 @@ export function TimeTracker({
 
   const handleStopTimer = async () => {
     try {
-      await stopTimer({ id: todoId })
+      await stopTimer.mutateAsync({ id: todoId })
     } catch (error) {
       console.error('Failed to stop timer:', error)
     }

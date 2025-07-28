@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { TodoBoard } from 'src/components/todo/todo-board'
 import { ProtectedRoute } from '~/components/protected-route'
+import { Navbar } from '~/components/ui/navbar'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -9,7 +10,10 @@ export const Route = createFileRoute('/')({
 function Home() {
   return (
     <ProtectedRoute>
-      <TodoBoard />
+      <div className="h-full max-w-7xl mx-auto flex flex-col">
+        <Navbar />
+        <TodoBoard />
+      </div>
     </ProtectedRoute>
   )
 }

@@ -27,7 +27,7 @@ export function TodoBoard() {
     todos?.filter((todo) => todo.completed && !todo.parentId) || []
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-4 space-y-6">
+    <div className="p-4 flex-1 overflow-hidden space-y-4 flex flex-col">
       <GroupSelector
         selectedGroupId={selectedGroupId}
         onGroupSelect={setSelectedGroupId}
@@ -35,9 +35,9 @@ export function TodoBoard() {
 
       {/* Todo Columns - Desktop: Two columns, Mobile: Tabs */}
       {selectedGroupId && (
-        <>
+        <div className="overflow-hidden flex-1">
           {/* Desktop Layout (lg and above) */}
-          <div className="hidden lg:grid lg:grid-cols-2 gap-6">
+          <div className="hidden lg:grid lg:grid-cols-2 lg:h-full gap-4">
             <TodoColumn
               todos={todos || []}
               isCompleted={false}
@@ -53,53 +53,54 @@ export function TodoBoard() {
           </div>
 
           {/* Mobile Layout (below lg) */}
-          <div className="lg:hidden">
-            <Tabs defaultValue="active" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger
-                  value="active"
-                  className="relative data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 data-[state=active]:border-blue-300 dark:data-[state=active]:bg-blue-900/30 dark:data-[state=active]:text-blue-300 dark:data-[state=active]:border-blue-700"
-                >
-                  Active Tasks
-                  {activeTodos.length > 0 && (
-                    <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-500 text-white rounded-full">
-                      {activeTodos.length}
-                    </span>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="completed"
-                  className="relative data-[state=active]:bg-green-100 data-[state=active]:text-green-800 data-[state=active]:border-green-300 dark:data-[state=active]:bg-green-900/30 dark:data-[state=active]:text-green-300 dark:data-[state=active]:border-green-700"
-                >
-                  Completed
-                  {completedTodos.length > 0 && (
-                    <span className="ml-2 px-1.5 py-0.5 text-xs bg-green-500 text-white rounded-full">
-                      {completedTodos.length}
-                    </span>
-                  )}
-                </TabsTrigger>
-              </TabsList>
+          <Tabs
+            defaultValue="active"
+            className="h-full flex flex-col space-y-2"
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger
+                value="active"
+                className="relative data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 data-[state=active]:border-blue-300 dark:data-[state=active]:bg-blue-900/30 dark:data-[state=active]:text-blue-300 dark:data-[state=active]:border-blue-700"
+              >
+                Active Tasks
+                {activeTodos.length > 0 && (
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-500 text-white rounded-full">
+                    {activeTodos.length}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="completed"
+                className="relative data-[state=active]:bg-green-100 data-[state=active]:text-green-800 data-[state=active]:border-green-300 dark:data-[state=active]:bg-green-900/30 dark:data-[state=active]:text-green-300 dark:data-[state=active]:border-green-700"
+              >
+                Completed
+                {completedTodos.length > 0 && (
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-green-500 text-white rounded-full">
+                    {completedTodos.length}
+                  </span>
+                )}
+              </TabsTrigger>
+            </TabsList>
 
-              <TabsContent value="active" className="mt-0">
-                <TodoColumn
-                  todos={todos || []}
-                  isCompleted={false}
-                  groupId={selectedGroupId}
-                  emptyMessage="No active tasks. Add one to get started!"
-                />
-              </TabsContent>
+            <TabsContent value="active" className="flex-1 overflow-y-auto">
+              <TodoColumn
+                todos={todos || []}
+                isCompleted={false}
+                groupId={selectedGroupId}
+                emptyMessage="No active tasks. Add one to get started!"
+              />
+            </TabsContent>
 
-              <TabsContent value="completed" className="mt-0">
-                <TodoColumn
-                  todos={todos || []}
-                  isCompleted={true}
-                  groupId={selectedGroupId}
-                  emptyMessage="No completed tasks yet. Keep working!"
-                />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </>
+            <TabsContent value="completed" className="flex-1 overflow-y-auto">
+              <TodoColumn
+                todos={todos || []}
+                isCompleted={true}
+                groupId={selectedGroupId}
+                emptyMessage="No completed tasks yet. Keep working!"
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
       )}
     </div>
   )

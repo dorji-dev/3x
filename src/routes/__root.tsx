@@ -7,7 +7,6 @@ import {
 import { QueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import appCss from '~/styles/app.css?url'
-import { Navbar } from 'src/components/ui/navbar'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -49,8 +48,7 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   return (
     <RootDocument>
-      <div className="h-[100dvh] flex flex-col">
-        <Navbar />
+      <div className="h-[100dvh]">
         <Outlet />
       </div>
     </RootDocument>

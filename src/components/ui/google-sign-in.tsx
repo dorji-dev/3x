@@ -5,11 +5,7 @@ export function GoogleSignInButton() {
   const { signInWithGoogle, isLoading } = useAuth()
 
   return (
-    <Button
-      onClick={signInWithGoogle}
-      disabled={isLoading}
-      className="w-full flex items-center justify-center gap-3 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
-    >
+    <Button onClick={signInWithGoogle} disabled={isLoading} size="lg">
       <svg
         className="w-5 h-5"
         viewBox="0 0 24 24"

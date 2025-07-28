@@ -15,9 +15,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'src/components/ui/dropdown-menu'
-import { useQuery, useMutation } from 'convex/react'
+import { useQuery } from 'convex/react'
+import { useMutation } from '~/lib/convex-helper'
 import { api } from 'convex/_generated/api'
 import type { Id } from 'convex/_generated/dataModel'
+import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 
 interface GroupSelectorProps {
   selectedGroupId: Id<'todoGroups'> | null
@@ -44,7 +46,9 @@ export function GroupSelector({
     if (!newGroupName.trim()) return
 
     try {
-      const groupId = await createGroup({ name: newGroupName.trim() })
+      const groupId = await createGroup.mutateAsync({
+        name: newGroupName.trim(),
+      })
       onGroupSelect(groupId)
       setNewGroupName('')
       setIsCreateOpen(false)
@@ -57,7 +61,7 @@ export function GroupSelector({
     if (!editGroupName.trim()) return
 
     try {
-      await updateGroup({ id: groupId, name: editGroupName.trim() })
+      await updateGroup.mutateAsync({ id: groupId, name: editGroupName.trim() })
       setEditingGroupId(null)
       setEditGroupName('')
     } catch (error) {
@@ -67,7 +71,7 @@ export function GroupSelector({
 
   const handleDeleteGroup = async (groupId: Id<'todoGroups'>) => {
     try {
-      await deleteGroup({ id: groupId })
+      await deleteGroup.mutateAsync({ id: groupId })
       if (selectedGroupId === groupId && groups && groups.length > 1) {
         const remainingGroups = groups.filter((g) => g._id !== groupId)
         if (remainingGroups.length > 0) {
@@ -99,9 +103,9 @@ export function GroupSelector({
   }
 
   return (
-    <div className="space-y-6 mb-8">
-      <div className="flex md:items-center flex-col sm:flex-row gap-4">
-        <div className="overflow-x-auto flex-1">
+    <div className="flex gap-x-4">
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="flex-1">
           <Tabs
             value={selectedGroupId || ''}
             onValueChange={(value) => onGroupSelect(value as Id<'todoGroups'>)}
@@ -173,61 +177,63 @@ export function GroupSelector({
               ))}
             </TabsList>
           </Tabs>
-        </div>
-
-        <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-dashed flex-shrink-0 bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200 hover:from-violet-100 hover:to-purple-100 dark:from-violet-950/20 dark:to-purple-950/20 dark:border-violet-800"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              New Group
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent
-            align="end"
-            className="w-[calc(100vw-2rem)] max-w-sm mx-4 sm:w-80 sm:mx-0"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <FolderOpen className="h-5 w-5 text-violet-600" />
-                <h4 className="font-medium">Create new group</h4>
-              </div>
-              <Input
-                placeholder="Group name..."
-                value={newGroupName}
-                onChange={(e) => setNewGroupName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleCreateGroup()
-                  } else if (e.key === 'Escape') {
-                    setIsCreateOpen(false)
-                    setNewGroupName('')
-                  }
-                }}
-                autoFocus
-              />
-              <div className="flex gap-2">
-                <Button onClick={handleCreateGroup} size="sm">
-                  Create
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setIsCreateOpen(false)
-                    setNewGroupName('')
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
+
+      <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="icon" className="border-dashed">
+            <Plus className="h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          className="w-[calc(100vw-2rem)] max-w-sm mx-4 sm:w-80 sm:mx-0"
+        >
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <FolderOpen className="h-5 w-5 text-violet-600" />
+              <h4 className="font-medium">Create new group</h4>
+            </div>
+            <Input
+              placeholder="Group name..."
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleCreateGroup()
+                } else if (e.key === 'Escape') {
+                  setIsCreateOpen(false)
+                  setNewGroupName('')
+                }
+              }}
+              autoFocus
+            />
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setIsCreateOpen(false)
+                  setNewGroupName('')
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={
+                  !newGroupName.trim() || createGroup.status === 'pending'
+                }
+                onClick={handleCreateGroup}
+                size="sm"
+              >
+                Create
+              </Button>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   )
 }

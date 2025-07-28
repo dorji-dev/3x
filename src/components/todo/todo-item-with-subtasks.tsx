@@ -26,7 +26,7 @@ import {
 } from 'src/components/ui/dropdown-menu'
 import { DurationSelect } from './duration-select'
 import { TimeTracker } from './time-tracker'
-import { useMutation } from 'convex/react'
+import { useMutation } from '~/lib/convex-helper'
 import { api } from 'convex/_generated/api'
 import type { Id } from 'convex/_generated/dataModel'
 
@@ -88,7 +88,7 @@ export function TodoItemWithSubtasks({
     if (!editText.trim()) return
 
     try {
-      await updateTodo({
+      await updateTodo.mutateAsync({
         id: todo._id,
         text: editText.trim(),
         durationMinutes: editDuration,
@@ -101,7 +101,7 @@ export function TodoItemWithSubtasks({
 
   const handleDelete = async () => {
     try {
-      await deleteTodo({ id: todo._id })
+      await deleteTodo.mutateAsync({ id: todo._id })
     } catch (error) {
       console.error('Failed to delete todo:', error)
     }
@@ -112,7 +112,7 @@ export function TodoItemWithSubtasks({
     if (isParentCheckboxDisabled) return
 
     try {
-      await toggleComplete({ id: todo._id })
+      await toggleComplete.mutateAsync({ id: todo._id })
     } catch (error) {
       console.error('Failed to toggle todo:', error)
     }
@@ -122,7 +122,7 @@ export function TodoItemWithSubtasks({
     if (!newSubtaskText.trim()) return
 
     try {
-      await createTodo({
+      await createTodo.mutateAsync({
         text: newSubtaskText.trim(),
         groupId,
         parentId: todo._id,
@@ -410,10 +410,7 @@ export function TodoItemWithSubtasks({
               onValueChange={setNewSubtaskDuration}
               placeholder="Set duration (optional)"
             />
-            <div className="flex gap-2">
-              <Button onClick={handleCreateSubtask} size="sm">
-                Add
-              </Button>
+            <div className="flex justify-end gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -425,8 +422,17 @@ export function TodoItemWithSubtasks({
               >
                 Cancel
               </Button>
+              <Button
+                disabled={
+                  !newSubtaskText.trim() || createTodo.status === 'pending'
+                }
+                onClick={handleCreateSubtask}
+                size="sm"
+              >
+                Add
+              </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-right text-muted-foreground">
               Press Ctrl+Enter to quickly add
             </p>
           </div>
