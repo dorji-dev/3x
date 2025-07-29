@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import { Plus, CheckCircle, Circle } from 'lucide-react'
 import { Button } from 'src/components/ui/button'
 import { Input } from 'src/components/ui/input'
-import { Badge } from 'src/components/ui/badge'
 import {
   Popover,
   PopoverContent,
@@ -117,56 +116,24 @@ export function TodoColumn({
     }
   }
 
-  const getColumnStyles = () => {
-    if (isCompleted) {
-      return {
-        container:
-          'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 dark:from-green-950/20 dark:to-emerald-950/20 dark:border-green-800',
-        header: 'border-green-200 dark:border-green-800',
-        badge:
-          'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700',
-        icon: 'text-green-600 dark:text-green-400',
-      }
-    }
-    return {
-      container:
-        'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 dark:from-blue-950/20 dark:to-indigo-950/20 dark:border-blue-800',
-      header: 'border-blue-200 dark:border-blue-800',
-      badge:
-        'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
-      icon: 'text-blue-600 dark:text-blue-400',
-    }
-  }
-
-  const styles = getColumnStyles()
-
   return (
-    <div
-      className={`border rounded-xl shadow-sm h-full overflow-y-auto ${styles.container}`}
-    >
+    <div className={`border rounded-xl shadow-sm h-full overflow-y-auto`}>
       {/* Column Header with Icon */}
-      <div className={`p-3 sm:p-4 border-b ${styles.header}`}>
+      <div className={`p-3 sm:p-4 border-b`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             {isCompleted ? (
-              <CheckCircle className={`h-6 w-6 ${styles.icon}`} />
+              <CheckCircle className={`h-6 w-6 text-green-500`} />
             ) : (
-              <Circle className={`h-6 w-6 ${styles.icon}`} />
+              <Circle className={`h-6 w-6 text-primary`} />
             )}
-            <Badge className={styles.badge}>
-              {organizedTodos.length}{' '}
-              {organizedTodos.length === 1 ? 'task' : 'tasks'}
-            </Badge>
+            <p className="text-muted-foreground">{organizedTodos.length}</p>
           </div>
 
           {!isCompleted && groupId && (
             <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
               <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-dashed w-full sm:w-auto hover:bg-white/50 dark:hover:bg-gray-900/50"
-                >
+                <Button size="sm">
                   <Plus className="h-4 w-4 mr-1" />
                   Add Task
                 </Button>
@@ -199,8 +166,7 @@ export function TodoColumn({
                   />
                   <div className="flex justify-end gap-2">
                     <Button
-                      variant="outline"
-                      size="sm"
+                      variant="secondary"
                       onClick={() => {
                         setIsCreateOpen(false)
                         setNewTodoText('')
@@ -214,7 +180,6 @@ export function TodoColumn({
                         !newTodoText.trim() || createTodo.status === 'pending'
                       }
                       onClick={handleCreateTodo}
-                      size="sm"
                     >
                       Add Task
                     </Button>
@@ -234,18 +199,18 @@ export function TodoColumn({
         {organizedTodos.length === 0 ? (
           <div className="text-center py-8 sm:py-12">
             <div
-              className={`w-12 h-12 mx-auto mb-3 rounded-full bg-white/50 dark:bg-gray-800/50 flex items-center justify-center`}
+              className={`w-12 h-12 mx-auto mb-3 rounded-full bg-muted-foreground/10 flex items-center justify-center`}
             >
               {isCompleted ? (
-                <CheckCircle className={`h-6 w-6 ${styles.icon}`} />
+                <CheckCircle className={`h-6 w-6 text-green-500`} />
               ) : (
-                <Circle className={`h-6 w-6 ${styles.icon}`} />
+                <Circle className={`h-6 w-6 text-primary`} />
               )}
             </div>
             <div className="text-muted-foreground text-sm">{emptyMessage}</div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {organizedTodos.map((todo) => (
               <TodoItemWithSubtasks
                 key={todo._id}

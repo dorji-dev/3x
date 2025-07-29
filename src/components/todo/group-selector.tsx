@@ -150,8 +150,16 @@ export function GroupSelector({
                         />
                       ) : (
                         <div className="flex items-center gap-2">
-                          <FolderOpen className="h-4 w-4" />
-                          <span>{group.name}</span>
+                          <FolderOpen className="h-4 w-4 text-muted-foreground" />
+                          <span
+                            className={
+                              group._id === selectedGroupId
+                                ? 'text-primary'
+                                : 'text-muted-foreground'
+                            }
+                          >
+                            {group.name}
+                          </span>
                           <Badge
                             variant="secondary"
                             className="ml-2 text-xs opacity-70"
@@ -165,11 +173,7 @@ export function GroupSelector({
                     {editingGroupId !== group._id && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 p-0 ml-1 opacity-0 group-hover:opacity-100 transition-opacity rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                          >
+                          <Button variant="ghost" size="icon">
                             <MoreHorizontal className="h-3 w-3" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -213,7 +217,7 @@ export function GroupSelector({
         >
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5 text-violet-600" />
+              <FolderOpen className="h-5 w-5 text-muted-foreground" />
               <h4 className="font-medium">Create new group</h4>
             </div>
             <Input
@@ -232,8 +236,7 @@ export function GroupSelector({
             />
             <div className="flex justify-end gap-2">
               <Button
-                variant="outline"
-                size="sm"
+                variant="secondary"
                 onClick={() => {
                   setIsCreateOpen(false)
                   setNewGroupName('')

@@ -183,14 +183,10 @@ export function TodoItemWithSubtasks({
   // Enhanced styling for subtasks
   const getItemStyles = () => {
     const baseStyles =
-      'group bg-card border border-border rounded-lg p-3 hover:shadow-md transition-all duration-200'
+      'group border border-border rounded-lg p-4 hover:shadow-md transition-all duration-200'
 
     if (level > 0) {
-      // Subtask styling
-      if (todo.completed) {
-        return `${baseStyles} opacity-60 bg-green-50/50 border-green-200/50 dark:bg-green-950/10 dark:border-green-800/30`
-      }
-      return `${baseStyles} bg-gray-50/50 dark:bg-gray-800/20`
+      return baseStyles
     }
 
     // Parent task styling
@@ -201,20 +197,14 @@ export function TodoItemWithSubtasks({
   }
 
   return (
-    <div
-      className={`${level > 0 ? 'ml-6 border-l-2 border-gray-200 dark:border-gray-700 pl-4' : ''}`}
-    >
+    <div className={`${level > 0 ? 'ml-6 border-l  pl-4' : ''}`}>
       <div className={getItemStyles()}>
         <div className="flex items-start gap-3">
           {/* Expand/Collapse Button for Parent Tasks */}
           {level === 0 && hasSubtasks && (
             <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
               <CollapsibleTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0 flex-shrink-0 hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
+                <Button variant="ghost" size="icon" className="h-6 w-6 p-0">
                   {isExpanded ? (
                     <ChevronDown className="h-3 w-3" />
                   ) : (
@@ -229,14 +219,14 @@ export function TodoItemWithSubtasks({
             checked={todo.completed}
             onCheckedChange={handleToggleComplete}
             disabled={isParentCheckboxDisabled}
-            className={`mt-0.5 flex-shrink-0 data-[state=checked]:bg-primary data-[state=checked]:border-primary ${
+            className={`mt-0.5 flex-shrink-0 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 ${
               isParentCheckboxDisabled ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           />
 
-          <div className="flex-1 min-w-0 space-y-2">
+          <div className="flex-1 min-w-0 space-y-4">
             {isEditing ? (
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Input
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
@@ -255,13 +245,11 @@ export function TodoItemWithSubtasks({
                   onValueChange={setEditDuration}
                   placeholder="Set duration"
                 />
-                <div className="flex gap-2">
-                  <Button onClick={handleUpdate} size="sm">
-                    Save
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={cancelEdit}>
+                <div className="flex justify-end gap-2">
+                  <Button variant="secondary" onClick={cancelEdit}>
                     Cancel
                   </Button>
+                  <Button onClick={handleUpdate}>Save</Button>
                 </div>
               </div>
             ) : (
@@ -336,9 +324,8 @@ export function TodoItemWithSubtasks({
               {level === 0 && !todo.completed && (
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   onClick={() => setIsAddingSubtask(true)}
-                  className="h-8 w-8 p-0 flex-shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-green-600 hover:text-green-700 hover:bg-green-50 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/20"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -347,11 +334,7 @@ export function TodoItemWithSubtasks({
               {/* More Options Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 flex-shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
-                  >
+                  <Button variant="ghost" size="icon">
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -412,8 +395,7 @@ export function TodoItemWithSubtasks({
             />
             <div className="flex justify-end gap-2">
               <Button
-                variant="outline"
-                size="sm"
+                variant="secondary"
                 onClick={() => {
                   setIsAddingSubtask(false)
                   setNewSubtaskText('')
@@ -427,7 +409,6 @@ export function TodoItemWithSubtasks({
                   !newSubtaskText.trim() || createTodo.status === 'pending'
                 }
                 onClick={handleCreateSubtask}
-                size="sm"
               >
                 Add
               </Button>
@@ -442,7 +423,7 @@ export function TodoItemWithSubtasks({
       {/* Render Subtasks */}
       {level === 0 && hasSubtasks && (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
-          <CollapsibleContent className="mt-2 space-y-2">
+          <CollapsibleContent className="mt-4 space-y-4">
             {todo.subtasks?.map((subtask) => (
               <TodoItemWithSubtasks
                 key={subtask._id}

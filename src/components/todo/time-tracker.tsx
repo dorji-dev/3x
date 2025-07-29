@@ -113,7 +113,7 @@ export function TimeTracker({
         message:
           difference === 0 ? 'Perfect!' : `${Math.abs(difference)}m early`,
         color: 'text-green-600 dark:text-green-400',
-        bgColor: 'bg-green-50 dark:bg-green-900/20',
+        bgColor: 'bg-muted-foreground/10',
       }
     } else {
       return {
@@ -121,7 +121,7 @@ export function TimeTracker({
         icon: AlertCircle,
         message: `${difference}m over (+${percentage}%)`,
         color: 'text-amber-600 dark:text-amber-400',
-        bgColor: 'bg-amber-50 dark:bg-amber-900/20',
+        bgColor: 'bg-muted-foreground/10',
       }
     }
   }
@@ -141,7 +141,7 @@ export function TimeTracker({
       {!completed && (
         <div className="flex items-center gap-2">
           <Button
-            variant={isRunning ? 'default' : 'outline'}
+            variant="secondary"
             size="sm"
             onClick={isRunning ? handleStopTimer : handleStartTimer}
             className={`h-6 px-2 text-xs ${isSubtask ? 'h-5 px-1.5' : ''}`}
@@ -160,7 +160,7 @@ export function TimeTracker({
           </Button>
 
           {(isRunning || totalElapsedTime > 0) && (
-            <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+            <div className="flex items-center gap-1 text-primary">
               <Clock className="h-3 w-3" />
               <span className="font-mono text-xs">
                 {formatElapsedTime(totalElapsedTime)} /{' '}

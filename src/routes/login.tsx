@@ -13,12 +13,12 @@ function LoginPage() {
   const router = useRouter()
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isLoading && isAuthenticated) {
       router.navigate({ to: '/' })
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, isLoading])
 
-  if (isLoading && !isAuthenticated) return <Loader />
+  if (isLoading || isAuthenticated) return <Loader />
 
   return (
     <div className="h-full flex items-center justify-center">

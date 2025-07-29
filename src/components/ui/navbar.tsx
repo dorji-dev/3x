@@ -15,10 +15,10 @@ export function Navbar() {
           <img
             src={currentUser.image}
             alt={currentUser.name || 'User'}
-            className="w-8 h-8 rounded-full"
+            className="w-8 h-8 rounded-full border border-primary/50"
           />
         )}
-        <span className="text-sm text-gray-600 truncate max-w-[150px]">
+        <span className="text-sm text-muted-foreground truncate max-w-[150px]">
           {currentUser?.name || currentUser?.email}
         </span>
       </div>
