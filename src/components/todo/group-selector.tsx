@@ -1,5 +1,12 @@
 import { useState } from 'react'
-import { Plus, MoreHorizontal, Edit, Trash2, FolderOpen } from 'lucide-react'
+import {
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  FolderOpen,
+  ArrowRight,
+} from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger } from 'src/components/ui/tabs'
 import { Button } from 'src/components/ui/button'
 import { Input } from 'src/components/ui/input'
@@ -103,83 +110,91 @@ export function GroupSelector({
   }
 
   return (
-    <div className="flex gap-x-4">
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="flex-1">
-          <Tabs
-            value={selectedGroupId || ''}
-            onValueChange={(value) => onGroupSelect(value as Id<'todoGroups'>)}
-          >
-            <TabsList className="bg-white/50 backdrop-blur-sm border border-gray-200 shadow-sm w-max dark:bg-gray-900/50 dark:border-gray-700">
-              {groups.map((group) => (
-                <div key={group._id} className="flex items-center group">
-                  <TabsTrigger
-                    value={group._id}
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-md transition-all hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    {editingGroupId === group._id ? (
-                      <Input
-                        value={editGroupName}
-                        onChange={(e) => setEditGroupName(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleUpdateGroup(group._id)
-                          } else if (e.key === 'Escape') {
-                            setEditingGroupId(null)
-                            setEditGroupName('')
-                          }
-                        }}
-                        onBlur={() => handleUpdateGroup(group._id)}
-                        className="h-6 w-auto min-w-[80px] text-xs"
-                        autoFocus
-                      />
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <FolderOpen className="h-4 w-4" />
-                        <span>{group.name}</span>
-                        <Badge
-                          variant="secondary"
-                          className="ml-2 text-xs opacity-70"
-                        >
-                          {/* Todo count can be added later */}
-                        </Badge>
-                      </div>
-                    )}
-                  </TabsTrigger>
+    <div className="flex items-center justify-between gap-x-4">
+      {groups.length ? (
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="flex-1">
+            <Tabs
+              value={selectedGroupId || ''}
+              onValueChange={(value) =>
+                onGroupSelect(value as Id<'todoGroups'>)
+              }
+            >
+              <TabsList>
+                {groups.map((group) => (
+                  <div key={group._id} className="flex items-center group">
+                    <TabsTrigger
+                      value={group._id}
+                      className="cursor-pointer border border-background"
+                    >
+                      {editingGroupId === group._id ? (
+                        <Input
+                          value={editGroupName}
+                          onChange={(e) => setEditGroupName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleUpdateGroup(group._id)
+                            } else if (e.key === 'Escape') {
+                              setEditingGroupId(null)
+                              setEditGroupName('')
+                            }
+                          }}
+                          onBlur={() => handleUpdateGroup(group._id)}
+                          className="h-6 w-auto min-w-[80px] text-xs"
+                          autoFocus
+                        />
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <FolderOpen className="h-4 w-4" />
+                          <span>{group.name}</span>
+                          <Badge
+                            variant="secondary"
+                            className="ml-2 text-xs opacity-70"
+                          >
+                            {/* Todo count can be added later */}
+                          </Badge>
+                        </div>
+                      )}
+                    </TabsTrigger>
 
-                  {editingGroupId !== group._id && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0 ml-1 opacity-0 group-hover:opacity-100 transition-opacity rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                        >
-                          <MoreHorizontal className="h-3 w-3" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => startEdit(group)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDeleteGroup(group._id)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </div>
-              ))}
-            </TabsList>
-          </Tabs>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
+                    {editingGroupId !== group._id && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0 ml-1 opacity-0 group-hover:opacity-100 transition-opacity rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                          >
+                            <MoreHorizontal className="h-3 w-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem onClick={() => startEdit(group)}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteGroup(group._id)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
+                ))}
+              </TabsList>
+            </Tabs>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
+      ) : (
+        <p className="text-muted-foreground flex items-center gap-2">
+          Create a group to get started <ArrowRight className="h-4 w-4" />
+        </p>
+      )}
 
       <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <PopoverTrigger asChild>
