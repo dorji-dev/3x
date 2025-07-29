@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Plus,
   MoreHorizontal,
@@ -30,7 +30,7 @@ import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 
 interface GroupSelectorProps {
   selectedGroupId: Id<'todoGroups'> | null
-  onGroupSelect: (groupId: Id<'todoGroups'>) => void
+  onGroupSelect: (groupId: Id<'todoGroups'> | null) => void
 }
 
 export function GroupSelector({
@@ -48,6 +48,14 @@ export function GroupSelector({
   const createGroup = useMutation(api.todoGroups.create)
   const updateGroup = useMutation(api.todoGroups.update)
   const deleteGroup = useMutation(api.todoGroups.remove)
+
+  useEffect(() => {
+    if (groups && groups.length > 0) {
+      if (!selectedGroupId) {
+        onGroupSelect(groups[0]._id)
+      }
+    }
+  }, [groups, onGroupSelect])
 
   const handleCreateGroup = async () => {
     if (!newGroupName.trim()) return
@@ -79,10 +87,12 @@ export function GroupSelector({
   const handleDeleteGroup = async (groupId: Id<'todoGroups'>) => {
     try {
       await deleteGroup.mutateAsync({ id: groupId })
-      if (selectedGroupId === groupId && groups && groups.length > 1) {
-        const remainingGroups = groups.filter((g) => g._id !== groupId)
+      if (selectedGroupId === groupId) {
+        const remainingGroups = groups?.filter((g) => g._id !== groupId) ?? []
         if (remainingGroups.length > 0) {
           onGroupSelect(remainingGroups[0]._id)
+        } else {
+          onGroupSelect(null)
         }
       }
     } catch (error) {
@@ -103,11 +113,6 @@ export function GroupSelector({
         </div>
       </div>
     )
-
-  // Auto-select first group if none selected
-  if (!selectedGroupId && groups.length > 0) {
-    onGroupSelect(groups[0]._id)
-  }
 
   return (
     <div className="flex items-center justify-between gap-x-4">
