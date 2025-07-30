@@ -119,79 +119,77 @@ export function TodoColumn({
   return (
     <div className={`border rounded-xl shadow-sm h-full overflow-y-auto`}>
       {/* Column Header with Icon */}
-      <div className={`p-3 sm:p-4 border-b`}>
-        <div className="flex justify-between items-center gap-3">
-          <div className="flex items-center gap-3">
-            {isCompleted ? (
-              <CheckCircle className={`h-6 w-6 text-green-500`} />
-            ) : (
-              <Circle className={`h-6 w-6 text-primary`} />
-            )}
-            <p className="text-muted-foreground">{organizedTodos.length}</p>
-          </div>
-
-          {!isCompleted && groupId && (
-            <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-              <PopoverTrigger asChild>
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Task
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                align="end"
-                className="w-[calc(100vw-2rem)] max-w-sm mx-4 sm:w-80 sm:mx-0"
-              >
-                <div className="space-y-4">
-                  <h4 className="font-medium">Add new task</h4>
-                  <Input
-                    placeholder="What needs to be done?"
-                    value={newTodoText}
-                    onChange={(e) => setNewTodoText(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && e.ctrlKey) {
-                        handleCreateTodo()
-                      } else if (e.key === 'Escape') {
-                        setIsCreateOpen(false)
-                        setNewTodoText('')
-                        setNewTodoDuration(undefined)
-                      }
-                    }}
-                    autoFocus
-                  />
-                  <DurationSelect
-                    value={newTodoDuration}
-                    onValueChange={setNewTodoDuration}
-                    placeholder="Set duration (optional)"
-                  />
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="secondary"
-                      onClick={() => {
-                        setIsCreateOpen(false)
-                        setNewTodoText('')
-                        setNewTodoDuration(undefined)
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      disabled={
-                        !newTodoText.trim() || createTodo.status === 'pending'
-                      }
-                      onClick={handleCreateTodo}
-                    >
-                      Add Task
-                    </Button>
-                  </div>
-                  <p className="text-xs text-right text-muted-foreground">
-                    Press Ctrl+Enter to quickly add
-                  </p>
-                </div>
-              </PopoverContent>
-            </Popover>
+      <div className="flex justify-between items-center gap-x-4 px-3 border-b h-[54px]">
+        <div className="flex items-center gap-3">
+          {isCompleted ? (
+            <CheckCircle className={`h-6 w-6 text-green-500`} />
+          ) : (
+            <Circle className={`h-6 w-6 text-primary`} />
           )}
+          <p className="text-muted-foreground">{organizedTodos.length}</p>
         </div>
+
+        {!isCompleted && groupId && (
+          <Popover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <PopoverTrigger asChild>
+              <Button size="sm" variant="secondary">
+                <Plus />
+                Add Task
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              className="w-[calc(100vw-2rem)] max-w-sm mx-4 sm:w-80 sm:mx-0"
+            >
+              <div className="space-y-4">
+                <h4 className="font-medium">Add new task</h4>
+                <Input
+                  placeholder="What needs to be done?"
+                  value={newTodoText}
+                  onChange={(e) => setNewTodoText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && e.ctrlKey) {
+                      handleCreateTodo()
+                    } else if (e.key === 'Escape') {
+                      setIsCreateOpen(false)
+                      setNewTodoText('')
+                      setNewTodoDuration(undefined)
+                    }
+                  }}
+                  autoFocus
+                />
+                <DurationSelect
+                  value={newTodoDuration}
+                  onValueChange={setNewTodoDuration}
+                  placeholder="Set duration (optional)"
+                />
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setIsCreateOpen(false)
+                      setNewTodoText('')
+                      setNewTodoDuration(undefined)
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    disabled={
+                      !newTodoText.trim() || createTodo.status === 'pending'
+                    }
+                    onClick={handleCreateTodo}
+                  >
+                    Add Task
+                  </Button>
+                </div>
+                <p className="text-xs text-right text-muted-foreground">
+                  Press Ctrl+Enter to quickly add
+                </p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
 
       {/* Column Content */}
