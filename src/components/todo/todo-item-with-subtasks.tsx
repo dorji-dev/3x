@@ -219,7 +219,7 @@ export function TodoItemWithSubtasks({
             checked={todo.completed}
             onCheckedChange={handleToggleComplete}
             disabled={isParentCheckboxDisabled}
-            className={`mt-0.5 flex-shrink-0 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 ${
+            className={`flex-shrink-0 data-[state=checked]:bg-green-500 dark:data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 ${
               isParentCheckboxDisabled ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           />
@@ -319,53 +319,39 @@ export function TodoItemWithSubtasks({
 
           {/* Action Buttons */}
           {!isEditing && (
-            <div className="flex items-center gap-1">
-              {/* Add Subtask Button (only for parent tasks) */}
-              {level === 0 && !todo.completed && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsAddingSubtask(true)}
-                >
-                  <Plus className="h-4 w-4" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
-              )}
-
-              {/* More Options Menu */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={startEdit}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Edit
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {level === 0 && !todo.completed && (
+                  <DropdownMenuItem onClick={() => setIsAddingSubtask(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add subtask
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={handleToggleComplete}
-                    disabled={isParentCheckboxDisabled}
-                  >
-                    <Check className="mr-2 h-4 w-4" />
-                    {todo.completed ? 'Mark Incomplete' : 'Mark Complete'}
-                  </DropdownMenuItem>
-                  {level === 0 && !todo.completed && (
-                    <DropdownMenuItem onClick={() => setIsAddingSubtask(true)}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Subtask
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem
-                    onClick={handleDelete}
-                    className="text-destructive"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+                )}
+                <DropdownMenuItem onClick={startEdit}>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleToggleComplete}
+                  disabled={isParentCheckboxDisabled}
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  {todo.completed ? 'Mark Incomplete' : 'Mark Complete'}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  className="text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
 

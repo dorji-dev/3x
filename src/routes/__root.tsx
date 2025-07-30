@@ -7,6 +7,7 @@ import {
 import { QueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 import appCss from '~/styles/app.css?url'
+import { ThemeProvider } from 'src/components/providers/theme-provider'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -62,7 +63,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>

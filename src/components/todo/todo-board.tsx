@@ -58,10 +58,7 @@ export function TodoBoard() {
             className="h-full flex flex-col space-y-2"
           >
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger
-                value="active"
-                className="relative data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 data-[state=active]:border-blue-300 dark:data-[state=active]:bg-blue-900/30 dark:data-[state=active]:text-blue-300 dark:data-[state=active]:border-blue-700"
-              >
+              <TabsTrigger value="active">
                 Active Tasks
                 {activeTodos.length > 0 && (
                   <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-500 text-white rounded-full">
@@ -69,10 +66,7 @@ export function TodoBoard() {
                   </span>
                 )}
               </TabsTrigger>
-              <TabsTrigger
-                value="completed"
-                className="relative data-[state=active]:bg-green-100 data-[state=active]:text-green-800 data-[state=active]:border-green-300 dark:data-[state=active]:bg-green-900/30 dark:data-[state=active]:text-green-300 dark:data-[state=active]:border-green-700"
-              >
+              <TabsTrigger value="completed">
                 Completed
                 {completedTodos.length > 0 && (
                   <span className="ml-2 px-1.5 py-0.5 text-xs bg-green-500 text-white rounded-full">

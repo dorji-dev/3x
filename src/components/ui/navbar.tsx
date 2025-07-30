@@ -2,7 +2,7 @@ import { Button } from './button'
 import { useAuth } from 'src/lib/auth'
 import { useQuery } from 'convex/react'
 import { api } from 'convex/_generated/api'
-// import ThemeSwitcher from '../theme-switcher'
+import ThemeSwitcher from 'src/components/theme-switcher'
 
 export function Navbar() {
   const { signOut } = useAuth()
@@ -27,7 +27,7 @@ export function Navbar() {
         <Button variant="outline" onClick={signOut}>
           <span>Sign Out</span>
         </Button>
-        {/* <ThemeSwitcher /> */}
+        <ThemeSwitcher />
       </div>
     </nav>
   )
