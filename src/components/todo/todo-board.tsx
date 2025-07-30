@@ -61,7 +61,7 @@ export function TodoBoard() {
               <TabsTrigger value="active">
                 Active Tasks
                 {activeTodos.length > 0 && (
-                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-500 text-white rounded-full">
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-accent text-foreground rounded-full">
                     {activeTodos.length}
                   </span>
                 )}
@@ -69,7 +69,7 @@ export function TodoBoard() {
               <TabsTrigger value="completed">
                 Completed
                 {completedTodos.length > 0 && (
-                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-green-500 text-white rounded-full">
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-accent text-foreground rounded-full">
                     {completedTodos.length}
                   </span>
                 )}

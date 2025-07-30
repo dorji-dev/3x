@@ -21,8 +21,11 @@ function LoginPage() {
   if (isLoading || isAuthenticated) return <Loader />
 
   return (
-    <div className="h-full flex items-center justify-center">
-      <GoogleSignInButton />
+    <div className="h-full flex items-center justify-center text-center">
+      <div className="space-y-4">
+        <p className="text-2xl font-bold">Hi there!</p>
+        <GoogleSignInButton />
+      </div>
     </div>
   )
 }

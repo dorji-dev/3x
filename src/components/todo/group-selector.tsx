@@ -119,7 +119,7 @@ export function GroupSelector({
 
   return (
     <div className="flex items-center justify-between gap-x-4">
-      <div className="flex flex-1 items-center gap-x-4">
+      <div className="flex flex-1 items-center gap-x-2">
         {groups.length > 0 ? (
           <>
             <Select
@@ -154,7 +154,7 @@ export function GroupSelector({
                 <Popover open={isEditOpen} onOpenChange={setIsEditOpen}>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="secondary"
+                      variant="ghost"
                       size="icon"
                       onClick={openEditPopover}
                     >
@@ -200,10 +200,9 @@ export function GroupSelector({
                   </PopoverContent>
                 </Popover>
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   size="icon"
                   onClick={() => setIsDeleteAlertOpen(true)}
-                  className="text-destructive hover:text-destructive"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

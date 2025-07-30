@@ -9,7 +9,7 @@ export function Navbar() {
   const currentUser = useQuery(api.users.getCurrentUser)
 
   return (
-    <nav className="flex items-center p-4 justify-between gap-2 sm:gap-4">
+    <nav className="flex items-center p-4 justify-between gap-2 sm:gap-4 border">
       <div className="flex items-center gap-3">
         {currentUser?.image && (
           <img

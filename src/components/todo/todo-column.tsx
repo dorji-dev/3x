@@ -120,7 +120,7 @@ export function TodoColumn({
     <div className={`border rounded-xl shadow-sm h-full overflow-y-auto`}>
       {/* Column Header with Icon */}
       <div className={`p-3 sm:p-4 border-b`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex justify-between items-center gap-3">
           <div className="flex items-center gap-3">
             {isCompleted ? (
               <CheckCircle className={`h-6 w-6 text-green-500`} />
