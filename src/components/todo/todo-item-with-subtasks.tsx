@@ -197,7 +197,7 @@ export function TodoItemWithSubtasks({
   }
 
   return (
-    <div className={`${level > 0 ? 'ml-6 border-l  pl-4' : ''}`}>
+    <div className={`${level > 0 ? 'ml-2 border-l  pl-4' : ''}`}>
       <div className={getItemStyles()}>
         <div className="flex items-start gap-3">
           {/* Expand/Collapse Button for Parent Tasks */}
