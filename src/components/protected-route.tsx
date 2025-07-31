@@ -15,7 +15,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const currentUser = useQuery(api.users.getCurrentUser)
 
   const allowedEmails =
-    (import.meta as any).env.VITE_ALLOWED_EMAILS?.split('|') ?? []
+    (import.meta as any).env.VITE_ALLOWED_EMAILS?.split('_') ?? []
 
   console.log(
     'currentUser::::',
