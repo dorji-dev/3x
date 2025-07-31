@@ -17,13 +17,6 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const allowedEmails =
     (import.meta as any).env.VITE_ALLOWED_EMAILS?.split('_') ?? []
 
-  console.log(
-    'currentUser::::',
-    currentUser,
-    'allowedEmails::::',
-    allowedEmails,
-  )
-
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.navigate({ to: '/login' })

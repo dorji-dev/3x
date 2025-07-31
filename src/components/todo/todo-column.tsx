@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Plus, CheckCircle, Circle } from 'lucide-react'
+import { Plus, CheckCircle, Circle, ClipboardList } from 'lucide-react'
 import { Button } from 'src/components/ui/button'
 import { Input } from 'src/components/ui/input'
 import {
@@ -12,6 +12,92 @@ import { DurationSelect } from './duration-select'
 import { api } from 'convex/_generated/api'
 import type { Id } from 'convex/_generated/dataModel'
 import { useMutation } from '~/lib/convex-helper'
+import { toast } from 'sonner'
+import { format } from 'date-fns'
+import { DatePicker } from '../ui/datepicker'
+
+// Helper function to format duration in a readable way
+function formatDuration(minutes?: number): string {
+  if (!minutes) return ''
+  const hours = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  if (hours > 0) {
+    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
+  }
+  return `${mins}m`
+}
+
+// Helper function to format date
+function formatDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+// Helper function to generate report text from todos
+function generateReportText(
+  todos: TodoWithSubtasks[],
+  selectedDate?: Date,
+): string {
+  if (todos.length === 0) {
+    return 'No completed tasks to report.'
+  }
+
+  let report = `📋 Completed Tasks Report\n`
+  if (selectedDate) {
+    report += `Update for: ${format(selectedDate, 'PPP')}\n`
+  }
+
+  todos.forEach((todo, index) => {
+    report += `${index + 1}. ${todo.text}\n`
+
+    // Add duration if available
+    if (todo.durationMinutes) {
+      report += `   ⏱️ Duration: ${formatDuration(todo.durationMinutes)}\n`
+    }
+
+    // Add completion date only if no selected date is provided
+    if (!selectedDate && todo.completedTime) {
+      report += `   ✅ Completed: ${formatDate(todo.completedTime)}\n`
+    }
+
+    // Add subtasks if any
+    if (todo.subtasks && todo.subtasks.length > 0) {
+      const completedSubtasks = todo.subtasks.filter(
+        (subtask) => subtask.completed,
+      )
+      report += `   📝 Subtasks: ${completedSubtasks.length}/${todo.subtasks.length} completed\n`
+
+      completedSubtasks.forEach((subtask, subIndex) => {
+        report += `      ${index + 1}.${subIndex + 1} ${subtask.text}\n`
+        if (subtask.durationMinutes) {
+          report += `         ⏱️ Duration: ${formatDuration(subtask.durationMinutes)}\n`
+        }
+      })
+    }
+
+    report += '\n'
+  })
+
+  return report
+}
+
+// Helper function to copy text to clipboard
+async function copyToClipboard(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch (err) {
+    // Fallback for older browsers
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
+  }
+}
 
 interface TodoWithSubtasks {
   _id: Id<'todos'>
@@ -52,6 +138,8 @@ export function TodoColumn({
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [newTodoText, setNewTodoText] = useState('')
   const [newTodoDuration, setNewTodoDuration] = useState<number | undefined>()
+  const [isReportOpen, setIsReportOpen] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<Date>()
 
   const createTodo = useMutation(api.todos.create)
 
@@ -185,6 +273,61 @@ export function TodoColumn({
                 </div>
                 <p className="text-xs text-right text-muted-foreground">
                   Press Ctrl+Enter to quickly add
+                </p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
+
+        {isCompleted && groupId && (
+          <Popover open={isReportOpen} onOpenChange={setIsReportOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="secondary" size="sm" className="gap-2">
+                <ClipboardList />
+                Get report
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              className="w-[calc(100vw-2rem)] max-w-sm mx-4 sm:w-80 sm:mx-0"
+            >
+              <div className="space-y-4">
+                <h4 className="font-medium">Generate Report</h4>
+                <div className="space-y-2">
+                  <label className="text-sm block font-medium text-muted-foreground">
+                    Select date (optional)
+                  </label>
+                  <DatePicker date={selectedDate} setDate={setSelectedDate} />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setIsReportOpen(false)
+                      setSelectedDate(undefined)
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const reportText = generateReportText(
+                        organizedTodos,
+                        selectedDate,
+                      )
+                      copyToClipboard(reportText)
+                      toast.success('Report copied to clipboard!')
+                      setIsReportOpen(false)
+                      setSelectedDate(undefined)
+                    }}
+                  >
+                    Generate Report
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {selectedDate
+                    ? `Report will show "Update for: ${format(selectedDate, 'PPP')}" instead of individual completion dates.`
+                    : 'Leave date unselected to show individual completion dates for each task.'}
                 </p>
               </div>
             </PopoverContent>
