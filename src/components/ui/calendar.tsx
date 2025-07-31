@@ -52,13 +52,13 @@ function Calendar({
           defaultClassNames.nav,
         ),
         button_previous: cn(
-          buttonVariants({ variant: buttonVariant }),
-          'size-(--cell-size) aria-disabled:opacity-50 p-0 select-none',
+          buttonVariants({ variant: buttonVariant, size: 'icon' }),
+          'size-(--cell-size) aria-disabled:opacity-50 p-0 select-none mr-2',
           defaultClassNames.button_previous,
         ),
         button_next: cn(
-          buttonVariants({ variant: buttonVariant }),
-          'size-(--cell-size) aria-disabled:opacity-50 p-0 select-none',
+          buttonVariants({ variant: buttonVariant, size: 'icon' }),
+          'size-(--cell-size) aria-disabled:opacity-50 p-0 select-none ml-2',
           defaultClassNames.button_next,
         ),
         month_caption: cn(
@@ -100,7 +100,7 @@ function Calendar({
           defaultClassNames.week_number,
         ),
         day: cn(
-          'relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none',
+          'relative w-full h-full p-0 size-8 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none',
           defaultClassNames.day,
         ),
         range_start: cn(
