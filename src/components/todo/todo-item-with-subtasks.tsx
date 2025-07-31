@@ -237,7 +237,7 @@ export function TodoItemWithSubtasks({
                       cancelEdit()
                     }
                   }}
-                  className="text-sm"
+                  className=" "
                   autoFocus
                 />
                 <DurationSelect
@@ -257,9 +257,9 @@ export function TodoItemWithSubtasks({
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     <p
-                      className={`text-sm break-words ${
+                      className={`  break-words ${
                         todo.completed
-                          ? 'line-through text-muted-foreground'
+                          ? 'line-through text-muted-foreground decoration-muted-foreground/30'
                           : 'text-foreground'
                       }`}
                     >
@@ -371,7 +371,7 @@ export function TodoItemWithSubtasks({
                   setNewSubtaskDuration(undefined)
                 }
               }}
-              className="text-sm"
+              className=" "
               autoFocus
             />
             <DurationSelect

@@ -136,7 +136,7 @@ export function TimeTracker({
   }
 
   return (
-    <div className={`space-y-2 ${isSubtask ? 'text-xs' : 'text-sm'}`}>
+    <div className={`space-y-2 ${isSubtask ? 'text-xs' : ' '}`}>
       {/* Timer Controls and Display */}
       {!completed && (
         <div className="flex items-center gap-2">

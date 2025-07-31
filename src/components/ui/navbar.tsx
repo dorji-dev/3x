@@ -9,7 +9,7 @@ export function Navbar() {
   const currentUser = useQuery(api.users.getCurrentUser)
 
   return (
-    <nav className="flex items-center p-4 justify-between gap-2 sm:gap-4 border">
+    <nav className="flex items-center p-2 justify-between gap-2 sm:gap-4 border">
       <div className="flex items-center gap-3">
         {currentUser?.image && (
           <img
@@ -18,7 +18,7 @@ export function Navbar() {
             className="w-8 h-8 rounded-full border border-primary/50"
           />
         )}
-        <span className="text-sm text-muted-foreground truncate max-w-[150px]">
+        <span className="  text-muted-foreground truncate max-w-[150px]">
           {currentUser?.name || currentUser?.email}
         </span>
       </div>

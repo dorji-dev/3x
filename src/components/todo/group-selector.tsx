@@ -203,6 +203,7 @@ export function GroupSelector({
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsDeleteAlertOpen(true)}
+                  className="text-destructive hover:text-destructive/80"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -233,7 +234,7 @@ export function GroupSelector({
             )}
           </>
         ) : (
-          <p className="text-sm text-muted-foreground flex items-center gap-2">
+          <p className="  text-muted-foreground flex items-center gap-2">
             Create a group to get started <ArrowRight className="h-4 w-4" />
           </p>
         )}

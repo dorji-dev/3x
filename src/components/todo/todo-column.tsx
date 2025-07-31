@@ -117,7 +117,7 @@ export function TodoColumn({
   }
 
   return (
-    <div className={`border rounded-xl shadow-sm h-full overflow-y-auto`}>
+    <div className={`border h-full overflow-y-auto`}>
       {/* Column Header with Icon */}
       <div className="flex justify-between items-center gap-x-4 px-3 border-b h-[54px]">
         <div className="flex items-center gap-3">
@@ -205,7 +205,7 @@ export function TodoColumn({
                 <Circle className={`h-6 w-6 text-primary`} />
               )}
             </div>
-            <div className="text-muted-foreground text-sm">{emptyMessage}</div>
+            <div className="text-muted-foreground  ">{emptyMessage}</div>
           </div>
         ) : (
           <div className="space-y-4">

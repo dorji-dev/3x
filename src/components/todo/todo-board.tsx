@@ -27,7 +27,7 @@ export function TodoBoard() {
     todos?.filter((todo) => todo.completed && !todo.parentId) || []
 
   return (
-    <div className="p-4 flex-1 overflow-hidden space-y-4 flex flex-col">
+    <div className="p-2 sm:p-4 flex-1 overflow-hidden space-y-4 flex flex-col">
       <GroupSelector
         selectedGroupId={selectedGroupId}
         onGroupSelect={setSelectedGroupId}
