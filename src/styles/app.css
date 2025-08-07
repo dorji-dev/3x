@@ -10,9 +10,10 @@
 }
 
 body {
-  font-family: 'Bitcount Grid Single', sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-style: normal;
   font-size: 14px;
+  letter-spacing: 0.03em;
 }
 
 @layer base {
@@ -20,7 +21,7 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }
 
